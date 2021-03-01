@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 
+const cardsCounter = [4, 5, 6, 7, 8, 'all'];
+
 export const CardsCounter = () => {
-  const cardsCounter = [4, 5, 6, 7, 8, 'all'];
-  const [count, setCount] = useState(4);
+  
+  const [count, setCount] = useState(localStorage.getItem('cardsCount') || cardsCounter[0]);
 
   function handleCardsCount(event) {
-    setCount((prev) => prev = event.target.value)
+    setCount(event.target.value)
     localStorage.setItem('cardsCount', event.target.value)
   }
 
@@ -14,7 +16,7 @@ export const CardsCounter = () => {
         <h1 className="settings-description">Cards count:  </h1>
           <select name="parameters"
           className="count-cards-parameters"
-          value={localStorage.getItem('cardsCount') || count}
+          value={count}
           onChange={(event) => handleCardsCount(event)}
           >
             {cardsCounter.map((item) => {

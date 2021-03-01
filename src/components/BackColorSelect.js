@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 
+const backColors = ['#008080', '#ffd700', '#111', '#79589F'];
+
 export const BackColor = () => {
-  const backColors = ['#008080', '#ffd700', '#111', '#79589F'];
-  const [selectedColor, setSelectedColor] = useState('#008080');
+  
+  const [selectedColor, setSelectedColor] = useState(localStorage.getItem('backColor') || backColors[2]);
   
   function handleBackColor(event) {
-    setSelectedColor((prev) => prev = event.target.value)
+    setSelectedColor(event.target.value);
     localStorage.setItem('backColor', event.target.value);
   }
 
@@ -14,9 +16,9 @@ export const BackColor = () => {
         <h1 className="settings-description">Back side color:  </h1>
           <select name="parameters"
           className="back-color-parameters"
-          value={localStorage.getItem('backColor') || selectedColor}
-          style={{backgroundColor: `${localStorage.getItem('backColor') || selectedColor}`}}
-          onChange={(event) => handleBackColor(event)}
+          value={selectedColor}
+          style={{backgroundColor: `${selectedColor}`}}
+          onChange={handleBackColor}
           >
             {backColors.map((color) => {
                return < option 

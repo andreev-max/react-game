@@ -33,7 +33,7 @@ import vuejs from '../images/vuejs.png'
 import webpack from '../images/webpack.png'
 import webstorm from '../images/webstorm.png'
 
-import { getRandomInt, makeRandomArray } from '../simpleFunc';
+import { getRandomInt, shuffleAllElements } from '../simpleFunc';
 
 const allCards = [
   {isFlipped: false, section: 'frameworks', isOpened: false, imageSrc: angular, value: 'angular'},
@@ -71,6 +71,10 @@ const allCards = [
   {isFlipped: false, section: 'tools', isOpened: false, imageSrc: webstorm, value: 'webstorm'},
 ];
 
+const initCardsCount = 4;
+const lowerBoundForCreationId = 100;
+const upperBoundForCreationId = 110;
+
 function getSelectedCards(initArray, section, count) {
   if (section === 'all' && count === 'all') return initArray;
   let transformArray = [];
@@ -79,18 +83,19 @@ function getSelectedCards(initArray, section, count) {
   } else {
     transformArray = initArray.filter((item) => item.section === section)
   }
-  const transformArray2 = transformArray.sort(makeRandomArray);
+  const transformArray2 = transformArray.sort(shuffleAllElements);
   const transformArray3 = transformArray2.splice(0, count);
   return transformArray3
 }
 
 const selectedSection = localStorage.getItem('section') || 'languages';
-const selectedCount = localStorage.getItem('cardsCount') || 4;
+const selectedCount = localStorage.getItem('cardsCount') || initCardsCount;
 const selectedCards = getSelectedCards(allCards, selectedSection, selectedCount)
 
-const selectedCards2 = _.cloneDeep(selectedCards);
-const array = [...selectedCards, ...selectedCards2];
-const board = array.sort(makeRandomArray);
-board.forEach((item, index) => item.id = getRandomInt(index * 100, index * 110))
+const selectedCardsDublicate = _.cloneDeep(selectedCards);
+const selectedPairOfCards = [...selectedCards, ...selectedCardsDublicate];
 
-export default board
+const shuffledSelectedPairOfCards = selectedPairOfCards.sort(shuffleAllElements);
+shuffledSelectedPairOfCards.forEach((item, index) => item.id = getRandomInt(index * lowerBoundForCreationId, index * upperBoundForCreationId))
+
+export default shuffledSelectedPairOfCards

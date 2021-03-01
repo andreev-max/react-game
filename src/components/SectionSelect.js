@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 
+const sections = ['languages', 'tools', 'frameworks', 'all'];
+
 export const SectionSelect = () => {
-  const sections = ['languages', 'tools', 'frameworks', 'all'];
-  const [selectedSection, setSelectedSection] = useState('languages');
+  
+  const [selectedSection, setSelectedSection] = useState(localStorage.getItem('section') || sections[0]);
 
   function handleSection(event) {
-    setSelectedSection((prev) => prev = event.target.value)
+    setSelectedSection(event.target.value)
     localStorage.setItem('section', event.target.value)
   }
 
@@ -14,8 +16,8 @@ export const SectionSelect = () => {
         <h1 className="settings-description">Section:  </h1>
           <select name="parameters"
           className="section-parameters"
-          value={localStorage.getItem('section') || selectedSection}
-          onChange={(event) => handleSection(event)}
+          value={selectedSection}
+          onChange={handleSection}
           >
           {sections.map((section) => {
             return <option

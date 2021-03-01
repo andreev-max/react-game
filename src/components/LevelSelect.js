@@ -5,14 +5,16 @@ import hard from '../icons/hard.png'
 import impossible from '../icons/impossible.png'
 import suicide from '../icons/suicide.png'
 
-export const LevelSelect = () => {
-  const levels = ['easy', 'normal', 'hard',
+const levels = ['easy', 'normal', 'hard',
   'impossible', 'suicide'];
-  const icons = [easy, normal, hard, impossible, suicide];
-  const [selectedLevel, setSelectedLevel] = useState('easy');
+
+const icons = [easy, normal, hard, impossible, suicide];
+
+export const LevelSelect = () => {
+  const [selectedLevel, setSelectedLevel] = useState(localStorage.getItem('level') || levels[0]);
 
   function handleLevel(event) {
-    setSelectedLevel((prev) => prev = event.target.value)
+    setSelectedLevel(event.target.value)
     localStorage.setItem('level', event.target.value)
   }
 
@@ -21,8 +23,8 @@ export const LevelSelect = () => {
         <h1 className="settings-description">Difficulty Level:  </h1>
           <select name="parameters"
           className="level-parameters"
-          value={localStorage.getItem('level') || selectedLevel}
-          onChange={(event) => handleLevel(event)}
+          value={selectedLevel}
+          onChange={handleLevel}
           >
           {levels.map((level) => {
             return <option

@@ -16,7 +16,7 @@ export const Home = () => {
     });
 
   function startGame() {
-    setInitGame(initGame => initGame = true);
+    setInitGame(true);
     initGame ? playBg() : stop();
   }
 

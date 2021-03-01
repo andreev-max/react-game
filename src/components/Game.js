@@ -6,7 +6,7 @@ import successSound from '../sounds/success.mp3'
 import no from '../sounds/no.wav'
 import fonSound from '../sounds/fon.mp3'
 import failSound from '../sounds/fail.mp3'
-import board from './Board'
+import board from './board'
 import { Card } from './Card'
 
 console.log(board);
@@ -44,8 +44,8 @@ export const Game = (props) => {
   function flipCard(id, value) {
     playCardFlip();
     const card = {
-      id: id,
-      value: value
+      id,
+      value
     }
     setCards(prev => {
       return prev.map((item) => {
@@ -63,8 +63,7 @@ export const Game = (props) => {
   
   useEffect(() => {
     if (flippedCards.length < 2) return;
-    const firstFlippedCard = flippedCards[0];
-    const secondFlippedCard = flippedCards[1];
+    const [firstFlippedCard, secondFlippedCard] = flippedCards;
     console.log(firstFlippedCard);
     console.log(secondFlippedCard);
     if (secondFlippedCard && firstFlippedCard.value === secondFlippedCard.value && firstFlippedCard.id !== secondFlippedCard.id) {
@@ -123,7 +122,7 @@ export const Game = (props) => {
       <div className="timer-button">
         <h1 className="timer-seconds">{seconds}</h1>
         <button className="button-new-game"
-        onClick={(event) => {newGame(event)}}>
+        onClick={newGame}>
           New Game
         </button>
       </div>

@@ -1,10 +1,10 @@
 export function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
+  const roundedMin = Math.ceil(min);
+  const roundedMax = Math.floor(max);
+  return Math.floor(Math.random() * (roundedMax - roundedMin)) + roundedMin;
    //Максимум не включается, минимум включается
 }
 
-export function makeRandomArray(a, b) {
+export function shuffleAllElements(a, b) {
   return Math.random() - 0.5;
 };
