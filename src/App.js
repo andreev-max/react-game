@@ -5,6 +5,7 @@ import { About } from "./pages/About";
 import { Home } from "./pages/Home";
 import { Settings } from "./pages/Settings";
 import { Statistics } from "./pages/Statistics";
+import { ROUTE } from "./Routes";
 
 function App() {
   return (
@@ -12,10 +13,10 @@ function App() {
       <Navbar />
       <div className="container pt-1">
         <Switch>
-          <Route path={"/"} exact component={Home} />
-          <Route path={"/about"} component={About} />
-          <Route path={"/settings"} component={Settings} />
-          <Route path={"/statistics"} component={Statistics} />
+          <Route path={ROUTE.game} exact component={Home} />
+          <Route path={ROUTE.settings} component={Settings} />
+          <Route path={ROUTE.statistics} component={Statistics} />
+          <Route path={ROUTE.about} component={About} />
         </Switch>
       </div>
     </BrowserRouter>

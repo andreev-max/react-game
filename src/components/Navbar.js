@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import brainIcon from "../icons/brain.png";
+import { ROUTE } from "../Routes";
 
 export const Navbar = () => {
   return (
@@ -14,25 +15,24 @@ export const Navbar = () => {
 
       <ul className="navbar-nav">
         <li className="nav-item">
-          <NavLink className="link" to="/" exact>
+          <NavLink className="link" to={ROUTE.game} exact>
             Home
           </NavLink>
         </li>
 
         <li className="nav-item">
-          <NavLink className="link" to="/settings">
+          <NavLink className="link" to={ROUTE.settings}>
             Settings
           </NavLink>
         </li>
-
         <li className="nav-item">
-          <NavLink className="link" to="/about">
-            About
+          <NavLink className="link" to={ROUTE.statistics}>
+            Statistics
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="link" to="/statistics">
-            Statistics
+          <NavLink className="link" to={ROUTE.about}>
+            About
           </NavLink>
         </li>
       </ul>
