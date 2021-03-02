@@ -6,13 +6,13 @@ import { LOCAL_STORAGE_KEY } from "../components/localStorageConsts";
 
 export const Home = () => {
   const [defeat, setDefeat] = useState(false);
-  const [seconds, setSeconds] = useState(10);
   const foo = useRef();
   const [initGame, setInitGame] = useState(false);
   const musicValue = localStorage.getItem(LOCAL_STORAGE_KEY.music);
 
-  const [playBg, { stop }] = useSound(fonSound, {
+  const [playBg, { sound, stop }] = useSound(fonSound, {
     volume: 0.0005 * musicValue,
+    loop: true,
   });
 
   function startGame() {
@@ -27,29 +27,48 @@ export const Home = () => {
     }
   }
 
+  function startAutoPlay() {
+    setInitGame(true);
+  }
+
   useEffect(() => {
     if (initGame) {
-      playBg();
+      sound.play();
     } else {
       stop();
     }
     return () => {
       stop();
     };
-  }, [initGame, playBg, stop]);
+  }, [initGame, sound, stop]);
 
   function endGame() {
     setInitGame(false);
   }
 
+  function newGame() {
+    setInitGame(false)
+    // setInterval(() => {
+    //   setInitGame(true)
+    // }, 1000)
+  }
+
   return (
     <div className="game-box">
       {initGame ? (
-        <Game endGame={endGame} />
+        <Game 
+        newGame={newGame}
+        endGame={endGame} />
       ) : (
-        <button className="button-game start-button" onClick={startGame}>
+        <div className="start-buttons-wrapper">
+          <button className="button-game start-button" onClick={startGame}>
           Start Game
         </button>
+        <button className="button-game start-button" onClick={startAutoPlay}>
+          Autoplay
+        </button>
+        </div>
+        
         
       )}
     </div>

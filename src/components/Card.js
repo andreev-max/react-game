@@ -9,7 +9,9 @@ export const Card = ({ onMouseOver, hoveredByKeyboard, card, onClick }) => {
   }
 
   if (hoveredByKeyboard) {
-    classNames.push("flip");
+    if (!card.isOpened) {
+      classNames.push("flip");
+    }
   }
 
   return (

@@ -26,9 +26,9 @@ import webstorm from "../images/webstorm.png";
 
 import { getRandomInt, shuffleAllElements } from "../simpleFunc";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
-import { INIT_CONST } from "./initConsts";
+import { CARDSCOUNTER, INIT_CONST } from "./initConsts";
 
-const allCards = [
+export const ALLCARDS = [
   {
     isFlipped: false,
     section: "frameworks",
@@ -204,6 +204,12 @@ const upperBoundForCreationId = 110;
 
 function getSelectedCards(initArray, section, count) {
   if (section === "all" && count === "all") return initArray;
+  let pair = 8;
+  if (count === "all") {
+    pair = 8;
+  } else {
+    pair = parseInt(count);
+  }
   let transformArray = [];
   if (section === "all") {
     transformArray = initArray;
@@ -211,32 +217,24 @@ function getSelectedCards(initArray, section, count) {
     transformArray = initArray.filter((item) => item.section === section);
   }
   const transformArray2 = transformArray.sort(shuffleAllElements);
-  const transformArray3 = transformArray2.splice(0, count);
+  const transformArray3 = transformArray2.splice(0, pair);
   return transformArray3;
 }
 
-const selectedSection =
-  localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section;
-const selectedCount =
-  localStorage.getItem(LOCAL_STORAGE_KEY.count) || INIT_CONST.count;
-const selectedCards = getSelectedCards(
-  allCards,
-  selectedSection,
-  selectedCount
-);
-
-const selectedCardsDublicate = _.cloneDeep(selectedCards);
-const selectedPairOfCards = [...selectedCards, ...selectedCardsDublicate];
-
-const shuffledSelectedPairOfCards = selectedPairOfCards.sort(
-  shuffleAllElements
-);
-shuffledSelectedPairOfCards.forEach(
-  (item, index) =>
-    (item.id = getRandomInt(
-      index * lowerBoundForCreationId,
-      index * upperBoundForCreationId
-    ))
-);
-
-export default shuffledSelectedPairOfCards;
+export function getBoard(array, section, count) {
+  const selectedCards = getSelectedCards(array, section, count);
+  const selectedCardsDublicate = _.cloneDeep(selectedCards);
+  const selectedPairOfCards = [...selectedCards, ...selectedCardsDublicate];
+  const shuffledSelectedPairOfCards = selectedPairOfCards.sort(
+    shuffleAllElements
+  );
+  shuffledSelectedPairOfCards.forEach(
+    (item, index) =>
+      (item.id = getRandomInt(
+        index * lowerBoundForCreationId,
+        index * upperBoundForCreationId
+      ))
+  );
+  console.log(shuffledSelectedPairOfCards);
+  return shuffledSelectedPairOfCards;
+}

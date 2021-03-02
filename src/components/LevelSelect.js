@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
-import { INIT_CONST, levels } from "./initConsts";
+import { INIT_CONST, LEVELS } from "./initConsts";
 
 export const LevelSelect = () => {
   const [selectedLevel, setSelectedLevel] = useState(
@@ -21,7 +21,7 @@ export const LevelSelect = () => {
         value={selectedLevel}
         onChange={handleLevel}
       >
-        {levels.map((level) => {
+        {LEVELS.map((level) => {
           return (
             <option key={level} value={level} className="level-parameters">
               {level}

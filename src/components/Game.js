@@ -6,40 +6,68 @@ import successSound from "../sounds/success.mp3";
 import no from "../sounds/no.wav";
 import fonSound from "../sounds/fon.mp3";
 import failSound from "../sounds/fail.mp3";
-import board from "./board";
+import { ALLCARDS, getBoard } from "./board";
 import { Card } from "./Card";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
 import { getDate } from "../simpleFunc";
-import { INIT_CONST, KEYS } from "./initConsts";
+import { INIT_CONST, KEYS, getSeconds } from "./initConsts";
 
-console.log(board);
 
-export const Game = ({ endGame }) => {
-  const [cards, setCards] = useState(board);
+export const Game = ({ newGame, endGame }) => {
+  //! localStorage
+  const soundsValue =
+    localStorage.getItem(LOCAL_STORAGE_KEY.sounds) || INIT_CONST.sounds;
+  const musicValue =
+    localStorage.getItem(LOCAL_STORAGE_KEY.music) || INIT_CONST.music;
+  const selectedSection =
+    localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section;
+  const selectedCount =
+    localStorage.getItem(LOCAL_STORAGE_KEY.count) || INIT_CONST.count;
+    const selectedLevel =
+    localStorage.getItem(LOCAL_STORAGE_KEY.level) || INIT_CONST.level;
+
+    //!useState
   const [hoveredCard, setHoveredCard] = useState(0);
   const [openedCards, setOpenedCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [defeat, setDefeat] = useState(false);
-  const [seconds, setSeconds] = useState(100);
+  const [cards, setCards] = useState(() => {return getBoard(ALLCARDS, selectedSection, selectedCount)});
+  const [seconds, setSeconds] = useState(() => { return getSeconds(selectedCount, selectedLevel, selectedSection)});
   const foo = useRef();
 
+  //! Sound
+  const [playCardFlip] = useSound(flipCardSound, {
+    volume: 0.005 * soundsValue,
+  });
+  const [playSuccess] = useSound(successSound, {
+    volume: 0.01 * soundsValue,
+  });
+  const [playNo] = useSound(no, {
+    volume: 0.01 * soundsValue,
+  });
+  const [playComplete] = useSound(completeSound, {
+    volume: 0.05 * musicValue,
+  });
+  const [playFail] = useSound(failSound, {
+    volume: 0.01 * musicValue,
+  });
+  const [playBg, { stop }] = useSound(fonSound, {
+    volume: 0.0005 * musicValue,
+  });
+
   function onKeyDown(event) {
-    console.log(event.keyCode);
     switch (event.keyCode) {
       case KEYS.LEFT_ARROW:
-        console.log("лево");
         setHoveredCard((prev) => {
-          return hoveredCard === 0 ? cards.length : prev - 1;
+          return hoveredCard === 0 ? cards.length - 1 : prev - 1;
         });
         break;
       case KEYS.RIGHT_ARROW:
-        console.log("право");
         setHoveredCard((prev) => {
-          return hoveredCard === cards.length ? 0 : prev + 1;
+          return hoveredCard === cards.length - 1 ? 0 : prev + 1;
         });
         break;
       case KEYS.SPACE: {
-        console.log("пробел");
         const card = cards[hoveredCard];
         flipCard(card.id, card.value);
         break;
@@ -52,28 +80,6 @@ export const Game = ({ endGame }) => {
   function onMouseOver(index) {
     setHoveredCard(index);
   }
-
-  const soundsValue = localStorage.getItem(LOCAL_STORAGE_KEY.sounds);
-  const musicValue = localStorage.getItem(LOCAL_STORAGE_KEY.music);
-
-  const [playCardFlip] = useSound(flipCardSound, {
-    volume: 0.005 * soundsValue,
-  });
-  const [playSuccess] = useSound(successSound, {
-    volume: 0.01 * soundsValue,
-  });
-  const [playNo] = useSound(no, {
-    volume: 0.01 * soundsValue,
-  });
-  const [playComplete] = useSound(completeSound, {
-    volume: 0.05 * soundsValue,
-  });
-  const [playFail] = useSound(failSound, {
-    volume: 0.01 * soundsValue,
-  });
-  const [playBg, { stop }] = useSound(fonSound, {
-    volume: 0.0005 * musicValue,
-  });
 
   function flipCard(id, value) {
     playCardFlip();
@@ -135,13 +141,13 @@ export const Game = ({ endGame }) => {
 
   //! WIN
   useEffect(() => {
-    if (openedCards.length >= board.length) {
+    if (openedCards.length >= cards.length) {
       playComplete();
       const stat = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.stat));
       console.log(Array.isArray(stat));
       console.log(stat);
       const date = `${getDate()}`;
-      const section =
+      const section = 
         localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section;
       const count =
         localStorage.getItem(LOCAL_STORAGE_KEY.count) || INIT_CONST.count;
@@ -176,21 +182,19 @@ export const Game = ({ endGame }) => {
     }
   }, [seconds]);
 
-  function newGame(event) {
-    console.log(event.target);
-  }
 
   return (
     <div className="game-wrapper">
       <div className="timer-button">
         <h1 className="timer-seconds">{seconds}</h1>
+        <h1 className="open-stat">{openedCards.length}&nbsp; / &nbsp;{cards.length}</h1>
         <button className="button-game" onClick={newGame}>
           New Game
         </button>
       </div>
       <div className="board" tabIndex={0} onKeyDown={onKeyDown}>
         {cards.map((card, index) => {
-          // if (openedCards.includes(card.id)) card.isOpened = true;
+          if (openedCards.includes(card.id)) card.isOpened = true;
           return (
             <Card
               onMouseOver={() => {

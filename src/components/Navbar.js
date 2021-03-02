@@ -16,7 +16,7 @@ export const Navbar = () => {
       <ul className="navbar-nav">
         <li className="nav-item">
           <NavLink className="link" to={ROUTE.game} exact>
-            Home
+            Game
           </NavLink>
         </li>
 
