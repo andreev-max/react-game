@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { INIT_CONST } from "./initConsts";
+import { CARDSCOUNTER, INIT_CONST } from "./initConsts";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
-
-const cardsCounter = [4, 5, 6, 7, 8, "all"];
 
 export const CardsCounter = () => {
   const [count, setCount] = useState(
@@ -23,7 +21,7 @@ export const CardsCounter = () => {
         value={count}
         onChange={(event) => handleCardsCount(event)}
       >
-        {cardsCounter.map((item) => {
+        {CARDSCOUNTER.map((item) => {
           return (
             <option value={item} key={item} className="count-cards-parameter">
               {`  ${item} pair  `}

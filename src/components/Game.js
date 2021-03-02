@@ -184,7 +184,7 @@ export const Game = ({ endGame }) => {
     <div className="game-wrapper">
       <div className="timer-button">
         <h1 className="timer-seconds">{seconds}</h1>
-        <button className="button-new-game" onClick={newGame}>
+        <button className="button-game" onClick={newGame}>
           New Game
         </button>
       </div>

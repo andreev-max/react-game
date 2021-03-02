@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { INIT_CONST } from "./initConsts";
+import { FRONTCOLORS, INIT_CONST } from "./initConsts";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
-
-const frontColors = ["#008080", "#ffd700", "#111", "#79589F"];
 
 export const FrontColor = () => {
   const [selectedColor, setSelectedColor] = useState(
@@ -24,7 +22,7 @@ export const FrontColor = () => {
         style={{ backgroundColor: `${selectedColor}` }}
         onChange={handleFrontColor}
       >
-        {frontColors.map((color) => {
+        {FRONTCOLORS.map((color) => {
           return (
             <option
               key={color}

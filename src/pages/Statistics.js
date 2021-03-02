@@ -1,13 +1,10 @@
 import React from "react";
 import { LOCAL_STORAGE_KEY } from "../components/localStorageConsts";
 
-const statElems = ["#", "Date", "Section", "Cards Count", "Level"];
-
-const statRows = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+const statElems = ["Date", "Section", "Cards Count", "Level"];
 
 export const Statistics = () => {
-  const stat = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.stat));
-  console.log(stat);
+  const statRows = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.stat));
 
   return (
     <div className="stat-wrapper">
@@ -22,9 +19,16 @@ export const Statistics = () => {
       </div>
       <div className="stat-result">
         {statRows.map((row, index) => {
+          console.log(row);
           return (
-            <div className="stat-row" key={row}>
-              {}
+            <div className="stat-row" key={index}>
+              {Object.values(row).map((elem, index) => {
+                return (
+                  <div className="stat-row-elem" key={index}>
+                    {elem}
+                  </div>
+                );
+              })}
             </div>
           );
         })}

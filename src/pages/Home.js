@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { Game } from "../components/Game";
 import useSound from "use-sound";
 import fonSound from "../sounds/fon.mp3";
-import { Timer } from "../components/Timer";
 import { LOCAL_STORAGE_KEY } from "../components/localStorageConsts";
 
 export const Home = () => {
@@ -35,14 +34,9 @@ export const Home = () => {
       stop();
     }
     return () => {
-      console.log("zalupa");
       stop();
     };
   }, [initGame, playBg, stop]);
-
-  // useEffect(()  => {
-  //   playBg();
-  // }, [])
 
   function endGame() {
     setInitGame(false);
@@ -53,9 +47,10 @@ export const Home = () => {
       {initGame ? (
         <Game endGame={endGame} />
       ) : (
-        <button className="btn btn-primary" onClick={startGame}>
+        <button className="button-game start-button" onClick={startGame}>
           Start Game
         </button>
+        
       )}
     </div>
   );

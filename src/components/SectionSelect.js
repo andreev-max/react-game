@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { INIT_CONST } from "./initConsts";
+import { INIT_CONST, SECTIONS } from "./initConsts";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
-
-const sections = ["languages", "tools", "frameworks", "all"];
 
 export const SectionSelect = () => {
   const [selectedSection, setSelectedSection] = useState(
@@ -23,7 +21,7 @@ export const SectionSelect = () => {
         value={selectedSection}
         onChange={handleSection}
       >
-        {sections.map((section) => {
+        {SECTIONS.map((section) => {
           return (
             <option
               key={section}

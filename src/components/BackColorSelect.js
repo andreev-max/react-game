@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { INIT_CONST } from "./initConsts";
+import { BACKCOLORS, INIT_CONST } from "./initConsts";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
-
-const backColors = ["#008080", "#ffd700", "#111", "#79589F"];
 
 export const BackColor = () => {
   const [selectedColor, setSelectedColor] = useState(
@@ -24,7 +22,7 @@ export const BackColor = () => {
         style={{ backgroundColor: `${selectedColor}` }}
         onChange={handleBackColor}
       >
-        {backColors.map((color) => {
+        {BACKCOLORS.map((color) => {
           return (
             <option
               key={color}
