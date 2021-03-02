@@ -1,9 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export const Timer = () => {
-  return (
-    <div className="timer-wrapper">
-      
-    </div>
-  )
-}
+  return <div className="timer-wrapper"></div>;
+};

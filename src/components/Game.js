@@ -1,26 +1,60 @@
-import React, {useState, useEffect, useRef } from 'react'
-import useSound from 'use-sound';
-import flipCardSound from '../sounds/card.mp3'
-import completeSound from '../sounds/complete.mp3'
-import successSound from '../sounds/success.mp3'
-import no from '../sounds/no.wav'
-import fonSound from '../sounds/fon.mp3'
-import failSound from '../sounds/fail.mp3'
-import board from './board'
-import { Card } from './Card'
+import React, { useState, useEffect, useRef } from "react";
+import useSound from "use-sound";
+import flipCardSound from "../sounds/card.mp3";
+import completeSound from "../sounds/complete.mp3";
+import successSound from "../sounds/success.mp3";
+import no from "../sounds/no.wav";
+import fonSound from "../sounds/fon.mp3";
+import failSound from "../sounds/fail.mp3";
+import board from "./board";
+import { Card } from "./Card";
+import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
+import { getDate } from "../simpleFunc";
+import { INIT_CONST, KEYS } from "./initConsts";
 
 console.log(board);
 
-export const Game = (props) => {
+export const Game = ({ endGame }) => {
   const [cards, setCards] = useState(board);
+  const [hoveredCard, setHoveredCard] = useState(0);
   const [openedCards, setOpenedCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [defeat, setDefeat] = useState(false);
-  const [seconds, setSeconds] = useState(10);
+  const [seconds, setSeconds] = useState(100);
   const foo = useRef();
 
-  const soundsValue = localStorage.getItem('soundsValue');
-  const musicValue = localStorage.getItem('musicValue');
+  function onKeyDown(event) {
+    console.log(event.keyCode);
+    switch (event.keyCode) {
+      case KEYS.LEFT_ARROW:
+        console.log("лево");
+        setHoveredCard((prev) => {
+          return hoveredCard === 0 ? cards.length : prev - 1;
+        });
+        break;
+      case KEYS.RIGHT_ARROW:
+        console.log("право");
+        setHoveredCard((prev) => {
+          return hoveredCard === cards.length ? 0 : prev + 1;
+        });
+        break;
+      case KEYS.SPACE: {
+        console.log("пробел");
+        const card = cards[hoveredCard];
+        flipCard(card.id, card.value);
+        break;
+      }
+      default:
+        return;
+    }
+  }
+
+  function onMouseOver(index) {
+    setHoveredCard(index);
+  }
+
+  const soundsValue = localStorage.getItem(LOCAL_STORAGE_KEY.sounds);
+  const musicValue = localStorage.getItem(LOCAL_STORAGE_KEY.music);
 
   const [playCardFlip] = useSound(flipCardSound, {
     volume: 0.005 * soundsValue,
@@ -37,108 +71,141 @@ export const Game = (props) => {
   const [playFail] = useSound(failSound, {
     volume: 0.01 * soundsValue,
   });
-  const [playBg, {stop}] = useSound(fonSound, {
-      volume: 0.0005 * musicValue,
-    });  
+  const [playBg, { stop }] = useSound(fonSound, {
+    volume: 0.0005 * musicValue,
+  });
 
   function flipCard(id, value) {
     playCardFlip();
     const card = {
       id,
-      value
-    }
-    setCards(prev => {
+      value,
+    };
+    setCards((prev) => {
       return prev.map((item) => {
         if (item.id !== id) {
-          return item
+          return item;
         }
         return {
           ...item,
-          isFlipped: true
-        }
-      })
-    })
+          isFlipped: true,
+        };
+      });
+    });
     setFlippedCards((prev) => [...prev, card]);
   }
-  
+
   useEffect(() => {
     if (flippedCards.length < 2) return;
     const [firstFlippedCard, secondFlippedCard] = flippedCards;
     console.log(firstFlippedCard);
     console.log(secondFlippedCard);
-    if (secondFlippedCard && firstFlippedCard.value === secondFlippedCard.value && firstFlippedCard.id !== secondFlippedCard.id) {
+    if (
+      secondFlippedCard &&
+      firstFlippedCard.value === secondFlippedCard.value &&
+      firstFlippedCard.id !== secondFlippedCard.id
+    ) {
       playSuccess();
-      setOpenedCards((prev) => [...prev,
+      setOpenedCards((prev) => [
+        ...prev,
         firstFlippedCard.id,
-        secondFlippedCard.id])
+        secondFlippedCard.id,
+      ]);
     } else {
       playNo();
       setTimeout(() => {
-        setCards(prev => {
+        setCards((prev) => {
           return prev.map((item) => {
-            if (item.id === firstFlippedCard.id || item.id === secondFlippedCard.id) {
+            if (
+              item.id === firstFlippedCard.id ||
+              item.id === secondFlippedCard.id
+            ) {
               return {
                 ...item,
-              isFlipped: false
+                isFlipped: false,
+              };
             }
-          }
-          return item
-        })
-      })
-      }, 600) 
+            return item;
+          });
+        });
+      }, 600);
     }
     setFlippedCards([]);
+  }, [flippedCards]);
 
-  }, [flippedCards])
-
+  //! WIN
   useEffect(() => {
     if (openedCards.length >= board.length) {
       playComplete();
-      console.log('you win')
+      const stat = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.stat));
+      console.log(Array.isArray(stat));
+      console.log(stat);
+      const date = `${getDate()}`;
+      const section =
+        localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section;
+      const count =
+        localStorage.getItem(LOCAL_STORAGE_KEY.count) || INIT_CONST.count;
+      const level =
+        localStorage.getItem(LOCAL_STORAGE_KEY.level) || INIT_CONST.level;
+      const game = { date, section, count, level };
+      console.log({ game });
+      stat.push(game);
+      console.log({ stat });
+      localStorage.setItem(LOCAL_STORAGE_KEY.stat, JSON.stringify(stat));
+      endGame();
     }
-  }, [openedCards])
+  }, [openedCards]);
 
-  useEffect(()  => {
+  useEffect(() => {
     function tick() {
-      setSeconds((prev) => prev - 1)
+      setSeconds((prev) => prev - 1);
     }
-    foo.current = setInterval(() => tick(), 1000)
-  }, [])
+    foo.current = setInterval(() => tick(), 1000);
+    return () => {
+      endGame();
+      clearInterval(foo.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (seconds === 0) {
+      endGame();
       clearInterval(foo.current);
       playFail();
-      setDefeat(true)
+      setDefeat(true);
     }
-  }, [seconds])
+  }, [seconds]);
 
   function newGame(event) {
-    console.log(event.target)
+    console.log(event.target);
   }
 
   return (
     <div className="game-wrapper">
       <div className="timer-button">
         <h1 className="timer-seconds">{seconds}</h1>
-        <button className="button-new-game"
-        onClick={newGame}>
+        <button className="button-new-game" onClick={newGame}>
           New Game
         </button>
       </div>
-      <div className="board">
-      {cards.map((card, index) => {
-        if (openedCards.includes(card.id)) card.isOpened = true; 
-        return (
-          <Card key={index}
-          card={card}
-          onClick={() => {
-            flipCard(card.id, card.value);
-          }}/>
-        )
-      })}
+      <div className="board" tabIndex={0} onKeyDown={onKeyDown}>
+        {cards.map((card, index) => {
+          // if (openedCards.includes(card.id)) card.isOpened = true;
+          return (
+            <Card
+              onMouseOver={() => {
+                onMouseOver(index);
+              }}
+              hoveredByKeyboard={hoveredCard === index}
+              key={index}
+              card={card}
+              onClick={() => {
+                flipCard(card.id, card.value);
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
-    </div>
-    
-  )
-}
+  );
+};
