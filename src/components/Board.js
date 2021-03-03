@@ -235,6 +235,5 @@ export function getBoard(array, section, count) {
         index * upperBoundForCreationId
       ))
   );
-  console.log(shuffledSelectedPairOfCards);
   return shuffledSelectedPairOfCards;
 }

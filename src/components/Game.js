@@ -8,12 +8,12 @@ import failSound from "../sounds/fail.mp3";
 import { ALLCARDS, getBoard } from "./board";
 import { Card } from "./Card";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
-import { getDate } from "../simpleFunc";
+import { getDate, getRandomInt } from "../simpleFunc";
 import { INIT_CONST, KEYS, getSeconds } from "./initConsts";
 import { DefeatModal } from "./DefeatModal";
 import { WinModal } from "./WinModal";
 
-export const Game = ({ newGame, endGame, stopFonSound }) => {
+export const Game = ({ newGame, endGame, stopFonSound, autoplay }) => {
   //! localStorage
   const soundsValue =
     localStorage.getItem(LOCAL_STORAGE_KEY.sounds) || INIT_CONST.sounds;
@@ -26,7 +26,7 @@ export const Game = ({ newGame, endGame, stopFonSound }) => {
   const selectedLevel =
     localStorage.getItem(LOCAL_STORAGE_KEY.level) || INIT_CONST.level;
 
-  //!useState
+  //! useState
   const [hoveredCard, setHoveredCard] = useState(0);
   const [openedCards, setOpenedCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
@@ -39,6 +39,35 @@ export const Game = ({ newGame, endGame, stopFonSound }) => {
     getSeconds(selectedCount, selectedLevel, selectedSection)
   );
   const foo = useRef();
+
+  //! Autoplay
+  // useEffect(() => {
+  //   if (autoplay) {
+  //     function autoplay(arr, num) {
+  //       console.log(arr.length)
+  //       console.log(num)
+  //         let index = num;
+  //         console.log(arr[index])
+  //         setHoveredCard(index);
+  //         flipCard(arr[index].id, arr[index].value);
+  //         let secondCard = arr.find((card) => {
+  //           return card.value === arr[index].value && card.id !== arr[index].id;
+  //         });
+  //         flipCard(secondCard.id, secondCard.value);
+  //     }
+  //     let count = 0;
+  //     let timerId = setInterval(() => {
+  //       console.log(cards.length)
+  //       if (count === ((cards.length - 1) / 2))  {
+  //         setWin(true)
+  //       }
+  //       autoplay(cards, count)
+  //       count += 1
+  //       console.log(count)
+  //     }, 1700);
+  //     setTimeout(() => { clearInterval(timerId)}, (((cards.length) / 2) * 1700))
+  //   }
+  // }, [autoplay]);
 
   //! Sound
   const [playCardFlip] = useSound(flipCardSound, {
@@ -61,12 +90,41 @@ export const Game = ({ newGame, endGame, stopFonSound }) => {
     switch (event.keyCode) {
       case KEYS.LEFT_ARROW:
         setHoveredCard((prev) => {
-          return hoveredCard === 0 ? cards.length - 1 : prev - 1;
+          let prevIndex = prev;
+          function getHovered(index, prevIndex) {
+            return hoveredCard === 0 || prevIndex === 0
+              ? cards.length - 1
+              : prev - (1 + index);
+          }
+          let counter = 0;
+          let newIndex = getHovered(counter, prevIndex);
+
+          while (openedCards.includes(cards[newIndex].id)) {
+            counter += 1;
+            prevIndex = newIndex;
+            newIndex = getHovered(counter, prevIndex);
+          }
+          return newIndex;
         });
         break;
       case KEYS.RIGHT_ARROW:
         setHoveredCard((prev) => {
-          return hoveredCard === cards.length - 1 ? 0 : prev + 1;
+          let prevIndex = prev;
+          function getHovered(index, prevIndex) {
+            return hoveredCard === cards.length - 1 ||
+              prevIndex === cards.length - 1
+              ? 0
+              : prev + 1 + index;
+          }
+          let counter = 0;
+          let newIndex = getHovered(counter, prevIndex);
+
+          while (openedCards.includes(cards[newIndex].id)) {
+            counter += 1;
+            prevIndex = newIndex;
+            newIndex = getHovered(counter, prevIndex);
+          }
+          return newIndex;
         });
         break;
       case KEYS.SPACE: {
@@ -84,6 +142,7 @@ export const Game = ({ newGame, endGame, stopFonSound }) => {
   }
 
   function flipCard(id, value) {
+    if (openedCards.includes(id)) return;
     playCardFlip();
     const card = {
       id,
@@ -106,8 +165,6 @@ export const Game = ({ newGame, endGame, stopFonSound }) => {
   useEffect(() => {
     if (flippedCards.length < 2) return;
     const [firstFlippedCard, secondFlippedCard] = flippedCards;
-    console.log(firstFlippedCard);
-    console.log(secondFlippedCard);
     if (
       secondFlippedCard &&
       firstFlippedCard.value === secondFlippedCard.value &&
@@ -149,8 +206,6 @@ export const Game = ({ newGame, endGame, stopFonSound }) => {
       setWin(true);
       playComplete();
       const stat = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.stat));
-      console.log(Array.isArray(stat));
-      console.log(stat);
       const date = `${getDate()}`;
       const section =
         localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section;
@@ -159,9 +214,7 @@ export const Game = ({ newGame, endGame, stopFonSound }) => {
       const level =
         localStorage.getItem(LOCAL_STORAGE_KEY.level) || INIT_CONST.level;
       const game = { date, section, count, level };
-      console.log({ game });
       stat.push(game);
-      console.log({ stat });
       localStorage.setItem(LOCAL_STORAGE_KEY.stat, JSON.stringify(stat));
     }
   }, [openedCards]);

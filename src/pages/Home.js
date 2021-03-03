@@ -9,6 +9,7 @@ export const Home = () => {
 
   const [initGame, setInitGame] = useState(false);
   const [playFonSound, setPlayFonSound] = useState(false);
+  const [autoplay, setAutoplay] = useState(false);
   
   const [playBg, { sound, stop }] = useSound(fonSound, {
     volume: 0.0005 * musicValue,
@@ -28,6 +29,8 @@ export const Home = () => {
   }
 
   function startAutoPlay() {
+    setPlayFonSound(true);
+    setAutoplay(true)
     setInitGame(true);
   }
 
@@ -48,9 +51,9 @@ export const Home = () => {
 
   function newGame() {
     setInitGame(false)
-    // setInterval(() => {
-    //   setInitGame(true)
-    // }, 1000)
+    setTimeout(() => {
+      setInitGame(true)
+    }, 300)
   }
 
   function stopFonSound() {
@@ -64,6 +67,7 @@ export const Home = () => {
         newGame={newGame}
         endGame={endGame}
         stopFonSound={stopFonSound}
+        autoplay={autoplay}
         />
       ) : (
         <div className="start-buttons-wrapper">

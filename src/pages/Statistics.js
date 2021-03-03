@@ -6,7 +6,6 @@ const statElems = ["Date", "Section", "Cards Count", "Level"];
 
 export const Statistics = () => {
   const statRows = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.stat));
-  console.log(statRows);
   return (
     <div className="stat-wrapper">
       <div className="stat-title">
@@ -21,7 +20,6 @@ export const Statistics = () => {
       <div className="stat-result">
         {statRows ? (
           statRows.map((row, index) => {
-          console.log(row);
           return (
             <div className="stat-row" key={index}>
               {Object.values(row).map((elem, index) => {

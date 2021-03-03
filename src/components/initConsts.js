@@ -26,12 +26,8 @@ export const KEYS = {
 
 export function getSeconds(pair, level, section) {
   const pairString = String(pair);
-  console.log(pair);
-  console.log(level);
-  console.log(section);
   let seconds = 0;
   if (section === SECTIONS[3] && pairString === CARDSCOUNTER[5]) {
-    console.log('zalupa')
     switch (level) {
       case LEVELS[4]:
         seconds = 70;
@@ -51,7 +47,6 @@ export function getSeconds(pair, level, section) {
     }
   } else {
     if (pairString === CARDSCOUNTER[0]) {
-    console.log(CARDSCOUNTER[0]);
     switch (level) {
       case LEVELS[4]:
         seconds = 6;
@@ -161,7 +156,6 @@ export function getSeconds(pair, level, section) {
     } 
   }
   }
-  console.log(seconds);
   return seconds;
 }
   
