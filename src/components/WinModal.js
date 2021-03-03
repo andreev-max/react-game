@@ -9,6 +9,7 @@ export const WinModal = ({ closeModal }) => {
         <h2 className="modal-subtitle">You are monster!</h2>
         <img src={winFinger}
         alt="win finger"
+        title="thumbs up"
         className="modal-icon"
         />
         <button

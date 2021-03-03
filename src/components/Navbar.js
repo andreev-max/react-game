@@ -8,7 +8,10 @@ export const Navbar = () => {
     <nav className="navbar">
       <NavLink className="link" to={ROUTE.game} exact>
         <div className="navbar-brand">
-          <img src={brainIcon} alt={"brain icon"} className="brand-icon" />
+          <img src={brainIcon}
+          alt="Brain icon"
+          title="Brain"
+          className="brand-icon" />
           <h1 className="brand-title">Memory</h1>
         </div>
       </NavLink>

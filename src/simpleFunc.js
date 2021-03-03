@@ -9,7 +9,12 @@ export function getDate() {
   const month = date.getMonth();
   const day = date.getDate();
   const hours = date.getHours();
-  const minutes = date.getMinutes();
+  let minutes;
+  if (date.getMinutes() < 10) {
+    minutes = `0${date.getMinutes()}`
+  } else {
+    minutes = date.getMinutes();
+  }
   return ` ${day} ${showMonth(month)} ${year} ${hours}:${minutes}`;
 }
 

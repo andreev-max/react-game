@@ -12,22 +12,37 @@ export const About = () => {
         <hr id="horizontal-bar" />
         <h2 className="subtitle">You can сontrol cards by keyboard:</h2>
         <div className="about-key">
-          <img className="about-key-image"
-          src={leftArrow}
-          alt="left arrow" />
-          <p className="about-key-description">&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Go prev card</p>
+          <img
+            className="about-key-image"
+            src={leftArrow}
+            title="Left Arrow Key"
+            alt="left arrow"
+          />
+          <p className="about-key-description">
+            &nbsp;&nbsp;&mdash;&nbsp;&nbsp;Go prev card
+          </p>
         </div>
         <div className="about-key">
-          <img className="about-key-image"
-          src={rightArrow}
-          alt="left arrow" />
-          <p className="about-key-description">&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Go next card</p>
+          <img
+            className="about-key-image"
+            src={rightArrow}
+            title="Right Arrow Key"
+            alt="left arrow"
+          />
+          <p className="about-key-description">
+            &nbsp;&nbsp;&mdash;&nbsp;&nbsp;Go next card
+          </p>
         </div>
         <div className="about-key">
-          <img className="about-key-image"
-          src={space}
-          alt="left arrow" />
-          <p className="about-key-description">&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Flip card</p>
+          <img
+            className="about-key-image"
+            src={space}
+            title="Space Key"
+            alt="left arrow"
+          />
+          <p className="about-key-description">
+            &nbsp;&nbsp;&mdash;&nbsp;&nbsp;Flip card
+          </p>
         </div>
         <hr id="horizontal-bar" />
         <p className="lead lead-year">
@@ -56,9 +71,13 @@ export const About = () => {
           </a>
         </p>
         <a className="logo-link" href="https://rs.school/react/">
-          <img className="about-logo" src={RSSCHOOLOGO} alt="RS School" />
+          <img className="about-logo"
+          src={RSSCHOOLOGO}
+          alt="RS School"
+          title="RS School Logo"
+          />
         </a>
-        
+
         <p className="lead">
           Version <span>1.1.42</span>
         </p>

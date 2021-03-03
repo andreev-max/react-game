@@ -36,6 +36,7 @@ export const Card = ({ onMouseOver, hoveredByKeyboard, card, onClick }) => {
           className="card-image"
           src={card.imageSrc}
           alt={card.value}
+          title={card.value}
           width="100"
         />
       </div>

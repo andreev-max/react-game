@@ -37,7 +37,10 @@ export const Statistics = () => {
         ) : (
           <div className="stat-no-title">
             You don't have any statistics yet. Please go to the game tab and show what you can do
-            <img src={demonIcon} alt={"demon icon"} className="stat-icon" />
+            <img src={demonIcon}
+            alt="Demon icon"
+            title="Demon"
+            className="stat-icon" />
             
           </div>
         )

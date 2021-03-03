@@ -9,6 +9,7 @@ export const DefeatModal = ({ closeModal }) => {
         <h2 className="modal-subtitle">You are looooser!</h2>
         <img src={defeatFinger}
         alt="win finger"
+        title="thumbs down"
         className="modal-icon"
         />
         <button
