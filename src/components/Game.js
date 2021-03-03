@@ -41,33 +41,29 @@ export const Game = ({ newGame, endGame, stopFonSound, autoplay }) => {
   const foo = useRef();
 
   //! Autoplay
-  // useEffect(() => {
-  //   if (autoplay) {
-  //     function autoplay(arr, num) {
-  //       console.log(arr.length)
-  //       console.log(num)
-  //         let index = num;
-  //         console.log(arr[index])
-  //         setHoveredCard(index);
-  //         flipCard(arr[index].id, arr[index].value);
-  //         let secondCard = arr.find((card) => {
-  //           return card.value === arr[index].value && card.id !== arr[index].id;
-  //         });
-  //         flipCard(secondCard.id, secondCard.value);
-  //     }
-  //     let count = 0;
-  //     let timerId = setInterval(() => {
-  //       console.log(cards.length)
-  //       if (count === ((cards.length - 1) / 2))  {
-  //         setWin(true)
-  //       }
-  //       autoplay(cards, count)
-  //       count += 1
-  //       console.log(count)
-  //     }, 1700);
-  //     setTimeout(() => { clearInterval(timerId)}, (((cards.length) / 2) * 1700))
-  //   }
-  // }, [autoplay]);
+  useEffect(() => {
+    if (autoplay) {
+      function autoplay(arr, num) {
+          let index = num;
+          console.log(arr[index])
+          setHoveredCard(index);
+          flipCard(arr[index].id, arr[index].value);
+          let secondCard = arr.find((card) => {
+            return card.value === arr[index].value && card.id !== arr[index].id;
+          });
+          flipCard(secondCard.id, secondCard.value);
+      }
+      let count = 0;
+      let timerId = setInterval(() => {
+        if (count === ((cards.length - 1) / 2))  {
+          setWin(true)
+        }
+        autoplay(cards, count)
+        count += 1
+      }, 1000);
+      setTimeout(() => { clearInterval(timerId)}, (((cards.length) / 2) * 1000))
+    }
+  }, [autoplay]);
 
   //! Sound
   const [playCardFlip] = useSound(flipCardSound, {
