@@ -6,7 +6,7 @@ import { ROUTE } from "../Routes";
 export const Navbar = () => {
   return (
     <nav className="navbar">
-      <NavLink className="link" to="/" exact>
+      <NavLink className="link" to={ROUTE.game} exact>
         <div className="navbar-brand">
           <img src={brainIcon} alt={"brain icon"} className="brand-icon" />
           <h1 className="brand-title">Memory</h1>

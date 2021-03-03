@@ -4,16 +4,16 @@ import flipCardSound from "../sounds/card.mp3";
 import completeSound from "../sounds/complete.mp3";
 import successSound from "../sounds/success.mp3";
 import no from "../sounds/no.wav";
-import fonSound from "../sounds/fon.mp3";
 import failSound from "../sounds/fail.mp3";
 import { ALLCARDS, getBoard } from "./board";
 import { Card } from "./Card";
 import { LOCAL_STORAGE_KEY } from "./localStorageConsts";
 import { getDate } from "../simpleFunc";
 import { INIT_CONST, KEYS, getSeconds } from "./initConsts";
+import { DefeatModal } from "./DefeatModal";
+import { WinModal } from "./WinModal";
 
-
-export const Game = ({ newGame, endGame }) => {
+export const Game = ({ newGame, endGame, stopFonSound }) => {
   //! localStorage
   const soundsValue =
     localStorage.getItem(LOCAL_STORAGE_KEY.sounds) || INIT_CONST.sounds;
@@ -23,16 +23,21 @@ export const Game = ({ newGame, endGame }) => {
     localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section;
   const selectedCount =
     localStorage.getItem(LOCAL_STORAGE_KEY.count) || INIT_CONST.count;
-    const selectedLevel =
+  const selectedLevel =
     localStorage.getItem(LOCAL_STORAGE_KEY.level) || INIT_CONST.level;
 
-    //!useState
+  //!useState
   const [hoveredCard, setHoveredCard] = useState(0);
   const [openedCards, setOpenedCards] = useState([]);
   const [flippedCards, setFlippedCards] = useState([]);
   const [defeat, setDefeat] = useState(false);
-  const [cards, setCards] = useState(() => {return getBoard(ALLCARDS, selectedSection, selectedCount)});
-  const [seconds, setSeconds] = useState(() => { return getSeconds(selectedCount, selectedLevel, selectedSection)});
+  const [win, setWin] = useState(false);
+  const [cards, setCards] = useState(() =>
+    getBoard(ALLCARDS, selectedSection, selectedCount)
+  );
+  const [seconds, setSeconds] = useState(() =>
+    getSeconds(selectedCount, selectedLevel, selectedSection)
+  );
   const foo = useRef();
 
   //! Sound
@@ -50,9 +55,6 @@ export const Game = ({ newGame, endGame }) => {
   });
   const [playFail] = useSound(failSound, {
     volume: 0.01 * musicValue,
-  });
-  const [playBg, { stop }] = useSound(fonSound, {
-    volume: 0.0005 * musicValue,
   });
 
   function onKeyDown(event) {
@@ -141,13 +143,16 @@ export const Game = ({ newGame, endGame }) => {
 
   //! WIN
   useEffect(() => {
-    if (openedCards.length >= cards.length) {
+    if (openedCards.length >= cards.length && openedCards.length > 3) {
+      stopFonSound();
+      clearInterval(foo.current);
+      setWin(true);
       playComplete();
       const stat = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.stat));
       console.log(Array.isArray(stat));
       console.log(stat);
       const date = `${getDate()}`;
-      const section = 
+      const section =
         localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section;
       const count =
         localStorage.getItem(LOCAL_STORAGE_KEY.count) || INIT_CONST.count;
@@ -158,7 +163,6 @@ export const Game = ({ newGame, endGame }) => {
       stat.push(game);
       console.log({ stat });
       localStorage.setItem(LOCAL_STORAGE_KEY.stat, JSON.stringify(stat));
-      endGame();
     }
   }, [openedCards]);
 
@@ -175,19 +179,31 @@ export const Game = ({ newGame, endGame }) => {
 
   useEffect(() => {
     if (seconds === 0) {
-      endGame();
-      clearInterval(foo.current);
-      playFail();
+      stopFonSound();
       setDefeat(true);
+      clearInterval(foo.current);
     }
   }, [seconds]);
 
+  useEffect(() => {
+    if (defeat && !win) {
+      playFail();
+    }
+  }, [defeat]);
+
+  function closeModal() {
+    setDefeat(false);
+    setWin(false);
+    endGame();
+  }
 
   return (
     <div className="game-wrapper">
       <div className="timer-button">
         <h1 className="timer-seconds">{seconds}</h1>
-        <h1 className="open-stat">{openedCards.length}&nbsp; / &nbsp;{cards.length}</h1>
+        <h1 className="open-stat">
+          {openedCards.length}&nbsp; / &nbsp;{cards.length}
+        </h1>
         <button className="button-game" onClick={newGame}>
           New Game
         </button>
@@ -210,6 +226,8 @@ export const Game = ({ newGame, endGame }) => {
           );
         })}
       </div>
+      {defeat && <DefeatModal closeModal={closeModal} />}
+      {win && <WinModal closeModal={closeModal} />}
     </div>
   );
 };
