@@ -1,29 +1,32 @@
 import React from 'react';
 import { LOCAL_STORAGE_KEY } from './localStorageConsts';
+import classNames from 'classnames';
 
 export const Card = ({ onMouseOver, hoveredByKeyboard, card, onClick }) => {
-	const classNames = [ 'card' ];
-
-	if (card.isOpened) {
-		classNames.push('opened');
-	}
-
-	if (hoveredByKeyboard) {
-		if (!card.isOpened) {
-			classNames.push('flip');
-		}
-	}
+	const frontClass = classNames({
+		front: true,
+		'rotate-front': card.isFlipped
+	});
+	const backClass = classNames({
+		back: true,
+		'rotate-back': card.isFlipped
+	});
+	const cardClass = classNames({
+		card: true,
+		opened: card.isOpened,
+		flip: hoveredByKeyboard && !card.isOpened
+	});
 
 	return (
-		<div className={classNames.join(' ')} onClick={() => onClick()} onMouseOver={onMouseOver}>
+		<div className={cardClass} onClick={() => onClick()} onMouseOver={onMouseOver}>
 			<div
-				className={`back ${card.isFlipped ? 'rotate-back' : ''}`}
+				className={backClass}
 				style={{
 					backgroundColor: `${localStorage.getItem(LOCAL_STORAGE_KEY.back)}`
 				}}
 			/>
 			<div
-				className={`front ${card.isFlipped ? 'rotate-front' : ''}`}
+				className={frontClass}
 				style={{
 					backgroundColor: `${localStorage.getItem(LOCAL_STORAGE_KEY.front)}`
 				}}

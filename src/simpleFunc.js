@@ -1,3 +1,5 @@
+import { Howl } from 'howler';
+
 function showMonth(month) {
 	const arr = [
 		'January',
@@ -41,3 +43,5 @@ export function getRandomInt(min, max) {
 export function shuffleAllElements(a, b) {
 	return Math.random() - 0.5;
 }
+
+export const createSound = (src, volume, loop = false) => new Howl({ src, volume: 0.01 * volume, loop });

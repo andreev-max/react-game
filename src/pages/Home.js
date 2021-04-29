@@ -1,50 +1,62 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Game } from '../components/Game';
-import useSound from 'use-sound';
 import fonSound from '../sounds/fon.mp3';
 import { LOCAL_STORAGE_KEY } from '../components/localStorageConsts';
+import { Howler } from 'howler';
+import { createSound } from '../simpleFunc';
+import { ALLCARDS, getBoard } from '../components/Board';
+import { INIT_CONST } from '../components/initConsts';
 
 export const Home = () => {
-	const musicValue = localStorage.getItem(LOCAL_STORAGE_KEY.music);
+	const musicValue = useMemo(() => localStorage.getItem(LOCAL_STORAGE_KEY.music), []);
+	const selectedSection = useMemo(() => localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section, []);
+	const selectedCount = useMemo(() => localStorage.getItem(LOCAL_STORAGE_KEY.count) || INIT_CONST.count, []);
+	const [ cards, setCards ] = useState([]);
 
 	const [ initGame, setInitGame ] = useState(false);
-	const [ playFonSound, setPlayFonSound ] = useState(false);
 	const [ autoplay, setAutoplay ] = useState(false);
 
-	const [ playBg, { sound, stop } ] = useSound(fonSound, {
-		volume: 0.0005 * musicValue,
-		loop: true
-	});
+	const audioFon = useMemo(() => createSound(fonSound, musicValue * 0.05, true), [ musicValue ]);
 
 	function startGame() {
-		setPlayFonSound(true);
+		const cleanCards = ALLCARDS.map((card) => {
+			return {
+				...card,
+				isFlipped: false,
+				isOpened: false
+			};
+		});
+		setCards(() => getBoard(cleanCards, selectedSection, selectedCount));
+		setAutoplay(false);
 		setInitGame(true);
-		if (!localStorage.getItem(LOCAL_STORAGE_KEY.stat)) {
-			const initStatistics = [];
-			localStorage.setItem(LOCAL_STORAGE_KEY.stat, JSON.stringify(initStatistics));
-		}
 	}
 
 	function startAutoPlay() {
-		setPlayFonSound(true);
+		const cleanCards = ALLCARDS.map((card) => {
+			return {
+				...card,
+				isFlipped: false,
+				isOpened: false
+			};
+		});
 		setAutoplay(true);
+		setCards(getBoard(cleanCards, selectedSection, selectedCount));
 		setInitGame(true);
 	}
 
 	useEffect(
 		() => {
-			if (playFonSound && initGame) {
-				playBg();
+			if (initGame) {
+				audioFon.play();
 			} else {
-				stop();
+				audioFon.stop();
 			}
 			return () => {
-				stop();
+				Howler.stop();
 			};
 		},
-		[initGame, playBg, playFonSound, sound, stop]
+		[ audioFon, initGame ]
 	);
-
 	function endGame() {
 		setInitGame(false);
 	}
@@ -52,18 +64,22 @@ export const Home = () => {
 	function newGame() {
 		setInitGame(false);
 		setTimeout(() => {
+			const cleanCards = ALLCARDS.map((card) => {
+				return {
+					...card,
+					isFlipped: false,
+					isOpened: false
+				};
+			});
+			setCards(getBoard(cleanCards, selectedSection, selectedCount));
 			setInitGame(true);
 		}, 300);
-	}
-
-	function stopFonSound() {
-		setPlayFonSound(false);
 	}
 
 	return (
 		<div className="game-box">
 			{initGame ? (
-				<Game newGame={newGame} endGame={endGame} stopFonSound={stopFonSound} autoplay={autoplay} />
+				<Game newGame={newGame} endGame={endGame} autoplay={autoplay} cards={cards} />
 			) : (
 				<div className="start-buttons-wrapper">
 					<button className="button-game start-button" onClick={startGame}>

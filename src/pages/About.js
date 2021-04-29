@@ -10,7 +10,7 @@ export const About = () => {
 			<div className="container">
 				<h1 className="display-4 about-title">About this application</h1>
 				<hr id="horizontal-bar" />
-				<h2 className="subtitle">You can сontrol cards by keyboard:</h2>
+				<h2 className="subtitle">You can сontrol cards by keyboard( click 'Tab' two times ):</h2>
 				<div className="about-key">
 					<img className="about-key-image" src={leftArrow} title="Left Arrow Key" alt="left arrow" />
 					<p className="about-key-description">&nbsp;&nbsp;&mdash;&nbsp;&nbsp;Go prev card</p>
