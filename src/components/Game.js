@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import flipCardSound from '../assets/sounds/card.mp3';
 import completeSound from '../assets/sounds/complete.mp3';
@@ -13,6 +14,7 @@ import { DefeatModal } from './DefeatModal';
 import { WinModal } from './WinModal';
 import { Howler } from 'howler';
 import { createSound } from '../utils/helpers';
+import { getDelay } from '../utils/getDelay';
 
 export const Game = ({ newGame, endGame, autoplay, cards }) => {
 	const soundsValue = useMemo(() => localStorage.getItem(LOCAL_STORAGE_KEY.sounds) || INIT_CONST.sounds, []);
@@ -25,6 +27,7 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 	const soundFail = useMemo(() => createSound(no, soundsValue), [ soundsValue ]);
 	const soundWin = useMemo(() => createSound(completeSound, musicValue), [ musicValue ]);
 	const soundDefeat = useMemo(() => createSound(failSound, musicValue), [ musicValue ]);
+	const delay = useMemo(() => getDelay(autoplay, selectedLevel), [ autoplay, selectedLevel ]);
 	const [ win, setWin ] = useState(false);
 	const [ defeat, setDefeat ] = useState(false);
 	const timer = useRef();
@@ -59,28 +62,25 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 					setTimeout(() => {
 						cards.find((item) => item.id === flippedCards[0].id).isFlipped = false;
 						cards.find((item) => item.id === flippedCards[1].id).isFlipped = false;
-					}, 450);
+					}, delay);
 				}
 				setFlippedCards([]);
 			}
 		},
-		[ cards, flippedCards, soundCorrect, soundFail ]
+		[ cards, flippedCards, soundCorrect, soundFail, delay ]
 	);
 
 	useEffect(
 		() => {
 			if (autoplay && autoplayCounter >= cards.length && openedCards.length < cards.length) {
-				console.log(openedCards);
-				console.log(cards);
 				let missedCounter = 0;
 				const missedCards = cards.filter((item) => item.isOpened === false);
-				missedCards.sort((a, b) => (a > b ? 1 : -1));
-				console.log(missedCards);
-				console.log(`${missedCards[0].id} || ${missedCards[0].value}`);
+				missedCards.reverse();
+				missedCards.sort((a, b) => (a.value > b.value ? 1 : -1));
 				const missedInterval = setInterval(() => {
 					flipCard(missedCards[missedCounter].id, missedCards[missedCounter].value);
 					missedCounter += 1;
-				}, 1000);
+				}, delay + 100);
 				if (missedCounter + 1 >= missedCards.length) {
 					clearInterval(missedCards);
 				}
@@ -89,7 +89,7 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 				};
 			}
 		},
-		[ autoplay, autoplayCounter, cards, cards.length, openedCards, openedCards.length ]
+		[ autoplay, autoplayCounter, cards, delay, flipCard, openedCards ]
 	);
 
 	useEffect(
@@ -103,16 +103,16 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 						flipCard(knownCard.id, knownCard.value);
 						setTimeout(() => {
 							setAutoplayCounter((prev) => prev + 1);
-						}, 1000);
-					}, 1000);
+						}, delay / 2);
+					}, delay + 100);
 				} else {
 					setTimeout(() => {
 						setAutoplayCounter((prev) => prev + 1);
-					}, 1000);
+					}, delay + 100);
 				}
 			}
 		},
-		[ autoplay, autoplayCounter, cards, flipCard ]
+		[ autoplay, autoplayCounter, cards, delay, flipCard ]
 	);
 
 	function onKeyDown(event) {
@@ -169,7 +169,7 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 		() => {
 			checkTwoCards();
 		},
-		[ autoplay, cards, flippedCards, soundCorrect, soundFail ]
+		[ checkTwoCards ]
 	);
 
 	//! WIN
@@ -182,10 +182,8 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 				}
 				clearInterval(timer.current);
 				setWin(true);
-				setTimeout(() => {
-					Howler.stop();
-					soundWin.play();
-				}, 300);
+				Howler.stop();
+				soundWin.play();
 				const stat = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY.stat));
 				const date = `${getDate()}`;
 				const section = localStorage.getItem(LOCAL_STORAGE_KEY.section) || INIT_CONST.section;
@@ -216,10 +214,8 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 		() => {
 			if (seconds <= 0) {
 				setDefeat(true);
-				setTimeout(() => {
-					Howler.stop();
-					soundDefeat.play();
-				}, 300);
+				Howler.stop();
+				soundDefeat.play();
 				clearInterval(timer.current);
 			}
 		},
@@ -250,6 +246,7 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 					if (openedCards.includes(card.id)) card.isOpened = true;
 					return (
 						<Card
+							autoplay={autoplay}
 							onMouseOver={() => {
 								onMouseOver(index);
 							}}

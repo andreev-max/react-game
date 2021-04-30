@@ -1,5 +1,7 @@
 export const LEVELS = [ 'easy', 'normal', 'hard', 'impossible', 'suicide' ];
 
+export const reversedLEVELS = [ 'suicide', 'impossible', 'hard', 'normal', 'easy' ];
+
 export const SECTIONS = [ 'languages', 'tools', 'frameworks', 'all' ];
 
 export const CARDSCOUNTER = [ '4', '5', '6', '7', '8', 'all' ];
@@ -22,4 +24,9 @@ export const KEYS = {
 	RIGHT_ARROW: 39,
 	LEFT_ARROW: 37,
 	SPACE: 32
+};
+
+export const time = {
+	forPlayer: 500,
+	forMashine: 300
 };

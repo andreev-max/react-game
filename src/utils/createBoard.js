@@ -31,6 +31,5 @@ export function getBoard(array, section, count) {
 	shuffledSelectedPairOfCards.forEach(
 		(item, index) => (item.id = getRandomInt(index * lowerBoundForCreationId, index * upperBoundForCreationId))
 	);
-	console.log(shuffledSelectedPairOfCards);
 	return shuffledSelectedPairOfCards;
 }

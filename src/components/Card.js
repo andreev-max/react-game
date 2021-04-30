@@ -2,7 +2,7 @@ import React from 'react';
 import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
 import classNames from 'classnames';
 
-export const Card = ({ onMouseOver, hoveredByKeyboard, card, onClick }) => {
+export const Card = ({ onMouseOver, hoveredByKeyboard, card, onClick, autoplay }) => {
 	const frontClass = classNames({
 		front: true,
 		'rotate-front': card.isFlipped
@@ -17,8 +17,14 @@ export const Card = ({ onMouseOver, hoveredByKeyboard, card, onClick }) => {
 		flip: hoveredByKeyboard && !card.isOpened
 	});
 
+	function handleClick() {
+		if (!autoplay) {
+			onClick();
+		}
+	}
+
 	return (
-		<div className={cardClass} onClick={() => onClick()} onMouseOver={onMouseOver}>
+		<div className={cardClass} onClick={handleClick} onMouseOver={onMouseOver}>
 			<div
 				className={backClass}
 				style={{
