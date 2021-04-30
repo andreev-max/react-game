@@ -1,6 +1,6 @@
 import React from 'react';
-import { LOCAL_STORAGE_KEY } from '../components/localStorageConsts';
-import demonIcon from '../icons/suicide.png';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
+import demonIcon from '../assets/icons/suicide.png';
 
 const statElems = [ 'Date', 'Section', 'Cards Count', 'Level' ];
 

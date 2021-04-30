@@ -1,5 +1,5 @@
 import React from 'react';
-import defeatFinger from '../icons/defeat-finger.png';
+import defeatFinger from '../assets/icons/defeat-finger.png';
 
 export const DefeatModal = ({ closeModal }) => {
 	return (

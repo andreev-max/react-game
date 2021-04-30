@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { CARDSCOUNTER, INIT_CONST } from './initConsts';
-import { LOCAL_STORAGE_KEY } from './localStorageConsts';
+import { CARDSCOUNTER, INIT_CONST } from '../utils/initConsts';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
 
 export const CardsCounter = () => {
 	const [ count, setCount ] = useState(localStorage.getItem(LOCAL_STORAGE_KEY.count) || INIT_CONST.count);

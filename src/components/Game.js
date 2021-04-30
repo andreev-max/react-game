@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import flipCardSound from '../sounds/card.mp3';
-import completeSound from '../sounds/complete.mp3';
-import successSound from '../sounds/success.mp3';
-import no from '../sounds/no.wav';
-import failSound from '../sounds/fail.mp3';
+import flipCardSound from '../assets/sounds/card.mp3';
+import completeSound from '../assets/sounds/complete.mp3';
+import successSound from '../assets/sounds/success.mp3';
+import no from '../assets/sounds/no.wav';
+import failSound from '../assets/sounds/fail.mp3';
 import { Card } from './Card';
-import { LOCAL_STORAGE_KEY } from './localStorageConsts';
-import { getDate } from '../simpleFunc';
-import { INIT_CONST, KEYS, getSeconds } from './initConsts';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
+import { getDate } from '../utils/helpers';
+import { INIT_CONST, KEYS } from '../utils/initConsts';
+import { getSeconds } from '../utils/getSecondsFunc';
 import { DefeatModal } from './DefeatModal';
 import { WinModal } from './WinModal';
 import { Howler } from 'howler';
-import { createSound } from '../simpleFunc';
+import { createSound } from '../utils/helpers';
 
 export const Game = ({ newGame, endGame, autoplay, cards }) => {
 	const soundsValue = useMemo(() => localStorage.getItem(LOCAL_STORAGE_KEY.sounds) || INIT_CONST.sounds, []);
@@ -64,6 +65,31 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 			}
 		},
 		[ cards, flippedCards, soundCorrect, soundFail ]
+	);
+
+	useEffect(
+		() => {
+			if (autoplay && autoplayCounter >= cards.length && openedCards.length < cards.length) {
+				console.log(openedCards);
+				console.log(cards);
+				let missedCounter = 0;
+				const missedCards = cards.filter((item) => item.isOpened === false);
+				missedCards.sort((a, b) => (a > b ? 1 : -1));
+				console.log(missedCards);
+				console.log(`${missedCards[0].id} || ${missedCards[0].value}`);
+				const missedInterval = setInterval(() => {
+					flipCard(missedCards[missedCounter].id, missedCards[missedCounter].value);
+					missedCounter += 1;
+				}, 1000);
+				if (missedCounter + 1 >= missedCards.length) {
+					clearInterval(missedCards);
+				}
+				return () => {
+					clearInterval(missedInterval);
+				};
+			}
+		},
+		[ autoplay, autoplayCounter, cards, cards.length, openedCards, openedCards.length ]
 	);
 
 	useEffect(
@@ -141,7 +167,6 @@ export const Game = ({ newGame, endGame, autoplay, cards }) => {
 
 	useEffect(
 		() => {
-			// if (!autoplay) {
 			checkTwoCards();
 		},
 		[ autoplay, cards, flippedCards, soundCorrect, soundFail ]

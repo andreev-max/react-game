@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { INIT_CONST, SECTIONS } from './initConsts';
-import { LOCAL_STORAGE_KEY } from './localStorageConsts';
+import { INIT_CONST, SECTIONS } from '../utils/initConsts';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
 
 export const SectionSelect = () => {
 	const [ selectedSection, setSelectedSection ] = useState(

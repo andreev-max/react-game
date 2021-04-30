@@ -1,5 +1,5 @@
 import React from 'react';
-import { LOCAL_STORAGE_KEY } from './localStorageConsts';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
 import classNames from 'classnames';
 
 export const Card = ({ onMouseOver, hoveredByKeyboard, card, onClick }) => {

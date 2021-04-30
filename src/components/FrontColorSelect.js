@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FRONTCOLORS, INIT_CONST } from './initConsts';
-import { LOCAL_STORAGE_KEY } from './localStorageConsts';
+import { FRONTCOLORS, INIT_CONST } from '../utils/initConsts';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
 
 export const FrontColor = () => {
 	const [ selectedColor, setSelectedColor ] = useState(

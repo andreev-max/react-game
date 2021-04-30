@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import brainIcon from '../icons/brain.png';
-import { ROUTE } from '../Routes';
+import brainIcon from '../assets/icons/brain.png';
+import { ROUTE } from '../utils/Routes';
 
 export const Navbar = () => {
 	return (

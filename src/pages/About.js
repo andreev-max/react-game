@@ -1,8 +1,8 @@
 import React from 'react';
-import RSSCHOOLOGO from '../icons/logo-rs.svg';
-import leftArrow from '../icons/arrow-left.png';
-import rightArrow from '../icons/arrow-right.png';
-import space from '../icons/space.png';
+import RSSCHOOLOGO from '../assets/icons/logo-rs.svg';
+import leftArrow from '../assets/icons/arrow-left.png';
+import rightArrow from '../assets/icons/arrow-right.png';
+import space from '../assets/icons/space.png';
 
 export const About = () => {
 	return (

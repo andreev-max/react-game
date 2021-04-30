@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { INIT_CONST } from './initConsts';
-import { LOCAL_STORAGE_KEY } from './localStorageConsts';
+import { INIT_CONST } from '../utils/initConsts';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
 
 export const MusicInput = () => {
 	const [ musicValue, setMusicValue ] = useState(

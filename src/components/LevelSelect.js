@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { LOCAL_STORAGE_KEY } from './localStorageConsts';
-import { INIT_CONST, LEVELS } from './initConsts';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
+import { INIT_CONST, LEVELS } from '../utils/initConsts';
 
 export const LevelSelect = () => {
 	const [ selectedLevel, setSelectedLevel ] = useState(

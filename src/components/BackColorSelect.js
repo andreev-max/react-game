@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { BACKCOLORS, INIT_CONST } from './initConsts';
-import { LOCAL_STORAGE_KEY } from './localStorageConsts';
+import { BACKCOLORS, INIT_CONST } from '../utils/initConsts';
+import { LOCAL_STORAGE_KEY } from '../utils/localStorageConsts';
 
 export const BackColor = () => {
 	const [ selectedColor, setSelectedColor ] = useState(localStorage.getItem(LOCAL_STORAGE_KEY.back) || INIT_CONST.back);

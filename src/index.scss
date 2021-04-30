@@ -181,7 +181,7 @@ code {
     border-radius: 3px;
     border: none;
     background-color: $bg;
-    transition: 0.2s;
+    transition: 0.1s;
 
     &.flip {
       transform: translateY(-10px);
@@ -207,7 +207,7 @@ code {
       flex-wrap: wrap;
       justify-content: center;
       align-items: flex-end;
-      transition: 1s;
+      transition: .750s;
       backface-visibility: hidden;
       border-radius: 3px;
       border: none;
@@ -338,7 +338,7 @@ code {
       width: 30px;
       height: 30px;
       border: 0;
-      background: url(icons/musical-notes.svg);
+      background: url(./assets/icons/musical-notes.svg);
       cursor: pointer;
     }
 
@@ -346,7 +346,7 @@ code {
       width: 30px;
       height: 24px;
       border: 0;
-      background: url(icons/musical-notes.svg);
+      background: url(./assets/icons/musical-notes.svg);
       cursor: pointer;
     }
   }

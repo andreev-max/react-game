@@ -1,5 +1,5 @@
 import React from 'react';
-import winFinger from '../icons/win-finger.png';
+import winFinger from '../assets/icons/win-finger.png';
 
 export const WinModal = ({ closeModal }) => {
 	return (
